@@ -22,12 +22,12 @@ int main(int argc, char *argv[]) {
 
     // Vertex shader.
     PNT::file vertexFile("res\\shaders\\vertex.glsl");
-    PNT::shader vertexShader(vertexFile.getContents(), GL_VERTEX_SHADER);
+    PNT::shader vertexShader(vertexFile.getContents().c_str(), GL_VERTEX_SHADER);
     vertexShader.compile();
 
     // Fragment shader.
     PNT::file fragmentFile("res\\shaders\\fragment.glsl");
-    PNT::shader fragmentShader(fragmentFile.getContents(), GL_FRAGMENT_SHADER);
+    PNT::shader fragmentShader(fragmentFile.getContents().c_str(), GL_FRAGMENT_SHADER);
     fragmentShader.compile();
 
     // Shader program.
