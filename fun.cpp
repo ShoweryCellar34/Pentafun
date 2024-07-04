@@ -5,7 +5,7 @@ PNT::image image;
 void eventCallback(PNT::Window* window, PNT::windowEvent event) {
     if(event.eventType == PNT_EVENT_TYPE_DROP) {
         image.load(event.dropEvent.paths[0]);
-        window->setDimentions(image.getDimentions().first, image.getDimentions().second);
+        window->setDimentions(image.getWidth(), image.getHeight());
         image.loadOnGPU();
     }
 }
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     }
 
     image.load("res\\textures\\logo\\ghoul.png");
-    PNT::Window window("Drag'n Drop", image.getDimentions().first, image.getDimentions().second, 500, 500, ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_DockingEnable);
+    PNT::Window window("Drag'n Drop", image.getWidth(), image.getHeight(), 500, 500, ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_DockingEnable);
     image.loadOnGPU();
     window.setEventCallback(eventCallback);
 
