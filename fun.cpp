@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
         PNT::processEvents();
 
         window.startFrame();
+        image.ImGuiDraw(ImVec2(500, 500));
 
         window.endFrame();
     }
