@@ -1,10 +1,11 @@
 #include <Pentagram.hpp>
+#include <glad.h>
 
 PNT::image image;
 
 void eventCallback(PNT::Window* window, PNT::windowEvent event) {
-    if(event.eventType == PNT_EVENT_TYPE_DROP) {
-        image.load(event.dropEvent.paths[0]);
+    if(event.type == PNT_EVENT_TYPE_DROP) {
+        image.load(event.dropFiles.paths[0]);
         window->setDimentions(image.getWidth(), image.getHeight());
         image.loadOnGPU();
     }
