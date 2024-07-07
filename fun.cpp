@@ -1,5 +1,4 @@
 #include <Pentagram.hpp>
-#include <iostream>
 
 PNT::image image;
 
@@ -12,6 +11,8 @@ void eventCallback(PNT::Window* window, PNT::windowEvent event) {
 }
 
 int main(int argc, char *argv[]) {
+    stbi_set_flip_vertically_on_load(true);
+
     if(!PNT::init()) {
         return 1;
     }
@@ -22,25 +23,26 @@ int main(int argc, char *argv[]) {
     window.setEventCallback(eventCallback);
 
     // Vertex shader.
-    PNT::file vertexFile("res\\shaders\\vertex.glsl");
-    PNT::shader vertexShader(vertexFile.getContents().c_str(), GL_VERTEX_SHADER);
+    PNT::file file("res\\shaders\\vertex.glsl");
+    PNT::shader vertexShader(file.getContents().c_str(), GL_VERTEX_SHADER);
     vertexShader.compile();
 
     // Fragment shader.
-    PNT::file fragmentFile("res\\shaders\\fragment.glsl");
-    PNT::shader fragmentShader(fragmentFile.getContents().c_str(), GL_FRAGMENT_SHADER);
+    file.close();
+    file.open("res\\shaders\\fragment.glsl");
+    PNT::shader fragmentShader(file.getContents().c_str(), GL_FRAGMENT_SHADER);
     fragmentShader.compile();
 
     // Shader program.
     PNT::program shader({&vertexShader, &fragmentShader});
     shader.link();
-    std::cout << shader.getError(600) << '\n';
 
     float vertices[] = {
-         0.5f,  0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        -0.5f,  0.5f, 0.0f
+        // positions          // texture coords
+         1.0f,  1.0f, 0.0f,   1.0f, 1.0f, // top right
+         1.0f, -1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+        -1.0f, -1.0f, 0.0f,   0.0f, 0.0f, // bottom left
+        -1.0f,  1.0f, 0.0f,   0.0f, 1.0f  // top left 
     };
     unsigned int indices[] = {
         0, 1, 3,
@@ -59,8 +61,11 @@ int main(int argc, char *argv[]) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glUniform1i(glGetUniformLocation(shader.getID(), "texture"), image.getID());
 
@@ -69,10 +74,10 @@ int main(int argc, char *argv[]) {
 
         window.startFrame();
 
-        ImGui::SetNextWindowSizeConstraints(ImVec2(image.getWidth() + 2.0f, image.getHeight() + 35.0f), ImVec2(image.getWidth() + 2.0f, image.getHeight() + 35.0f));
-        ImGui::Begin("Image");
-        image.ImGuiDraw(ImVec2(image.getWidth(), image.getHeight()));
-        ImGui::End();
+        shader.use();
+
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         window.endFrame();
     }
