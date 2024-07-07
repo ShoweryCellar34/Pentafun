@@ -3,10 +3,16 @@
 PNT::image image;
 
 void eventCallback(PNT::Window* window, PNT::windowEvent event) {
-    if(event.type == PNT_EVENT_TYPE_DROP) {
+    switch(event.type) {
+    case PNT_EVENT_TYPE_DROP:
         image.load(event.dropFiles.paths[0]);
         window->setDimentions(image.getWidth(), image.getHeight());
         image.loadOnGPU();
+        break;
+    case PNT_EVENT_TYPE_KEYBOARD:
+        if(event.keyboard.key == GLFW_KEY_R) {
+            window->setDimentions(image.getWidth(), image.getHeight());
+        }
     }
 }
 
@@ -68,6 +74,20 @@ int main(int argc, char *argv[]) {
     glEnableVertexAttribArray(1);
 
     glUniform1i(glGetUniformLocation(shader.getID(), "texture"), image.getID());
+
+    PNT::Window popup("POPUP", 300, 200, 600, 600, ImGuiConfigFlags_None);
+
+    while(!popup.shouldClose()) {
+        PNT::processEvents();
+
+        popup.startFrame();
+
+        if(ImGui::Button("TIP: You can press 'R' to reset window size to image size", ImVec2(200, 100))) {
+            window.setShouldClose(true);
+        }
+
+        popup.endFrame();
+    }
 
     while(!window.shouldClose()) {
         PNT::processEvents();
