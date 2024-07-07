@@ -1,5 +1,4 @@
 #include <Pentagram.hpp>
-#include <glad.h>
 
 PNT::image image;
 
