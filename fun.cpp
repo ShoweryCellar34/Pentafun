@@ -75,18 +75,6 @@ int main(int argc, char *argv[]) {
 
     glUniform1i(glGetUniformLocation(shader.getID(), "texture"), image.getID());
 
-    PNT::Window popup("POPUP", 300, 200, 600, 600, ImGuiConfigFlags_None);
-
-    while(!popup.shouldClose()) {
-        PNT::processEvents();
-
-        popup.startFrame();
-
-        popup.endFrame();
-    }
-
-    popup.~Window();
-
     while(!window.shouldClose()) {
         PNT::processEvents();
 
