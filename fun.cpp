@@ -1,5 +1,4 @@
 #include <Pentagram.hpp>
-#include <iostream>
 
 PNT::image image;
 
@@ -43,7 +42,6 @@ int main(int argc, char *argv[]) {
     // Shader program.
     PNT::program shader({&vertexShader, &fragmentShader});
     shader.link();
-    std::cout << shader.getError(600);
 
     float vertices[] = {
          1.0f,  1.0f,
