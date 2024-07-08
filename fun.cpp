@@ -1,4 +1,5 @@
 #include <Pentagram.hpp>
+#include <iostream>
 
 PNT::image image;
 
@@ -42,13 +43,13 @@ int main(int argc, char *argv[]) {
     // Shader program.
     PNT::program shader({&vertexShader, &fragmentShader});
     shader.link();
+    std::cout << shader.getError(600);
 
     float vertices[] = {
-        // positions          // texture coords
-         1.0f,  1.0f, 0.0f,   1.0f, 1.0f, // top right
-         1.0f, -1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-        -1.0f, -1.0f, 0.0f,   0.0f, 0.0f, // bottom left
-        -1.0f,  1.0f, 0.0f,   0.0f, 1.0f  // top left 
+         1.0f,  1.0f,
+         1.0f, -1.0f,
+        -1.0f, -1.0f,
+        -1.0f,  1.0f
     };
     unsigned int indices[] = {
         0, 1, 3,
@@ -67,11 +68,8 @@ int main(int argc, char *argv[]) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
 
     glUniform1i(glGetUniformLocation(shader.getID(), "texture"), image.getID());
 
