@@ -5,9 +5,10 @@ project(Pentafun DESCRIPTION "A Basic Game Engine" LANGUAGES CXX HOMEPAGE_URL "h
 add_executable(Pentafun)
 
 add_subdirectory(Pentagram)
+add_dependencies(Pentafun Pentagram)
 target_include_directories(Pentafun PUBLIC Pentagram)
 target_link_libraries(Pentafun PUBLIC Pentagram)
 
 target_sources(Pentafun PUBLIC "fun.cpp")
-file(REMOVE ${CMAKE_BINARY_DIR}\\res)
-file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
+
+add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/res ${PROJECT_BINARY_DIR}/res COMMENT "Copying resources into binary directory")
