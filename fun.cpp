@@ -11,8 +11,11 @@ void eventCallback(PNT::Window* window, PNT::windowEvent event) {
         image.loadOnGPU();
         break;
     case PNT_EVENT_TYPE_KEYBOARD:
-        if(event.keyboard.key == GLFW_KEY_R) {
+        switch(event.keyboard.key) {
+        case GLFW_KEY_R:
             window->setDimentions(image.getWidth(), image.getHeight());
+        case GLFW_KEY_ESCAPE:
+            window->setShouldClose(true);
         }
     }
 }
