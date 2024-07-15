@@ -2,7 +2,42 @@
 #include <iostream>
 #ifdef _WIN32
 #include <windows.h>
-#include <shlobj.h>
+#include <shobjidl.h>
+
+// Ripped for microsoft.
+PWSTR userGetPath() {
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    if (SUCCEEDED(hr)) {
+        IFileOpenDialog* pFileOpen;
+
+        // Create the FileOpenDialog object.
+        hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+        if (SUCCEEDED(hr)) {
+            // Show the Open dialog box.
+            hr = pFileOpen->Show(NULL);
+
+            // Get the file name from the dialog box.
+            if (SUCCEEDED(hr)) {
+                IShellItem* pItem;
+                hr = pFileOpen->GetResult(&pItem);
+                if (SUCCEEDED(hr)) {
+                    PWSTR pszFilePath;
+                    hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+                    // Display the file name to the user.
+                    if (SUCCEEDED(hr)) {
+                        return pszFilePath;
+                    }
+                    pItem->Release();
+                }
+            }
+            pFileOpen->Release();
+        }
+        CoUninitialize();
+    }
+    return PWSTR();
+}
 #endif
 
 PNT::image image;
@@ -26,7 +61,20 @@ void eventCallback(PNT::Window* window, PNT::windowEvent event) {
                 break;
 #ifdef _WIN32
             case GLFW_KEY_TAB:
+                PWSTR wpath = userGetPath();
+                size_t origsize = wcslen(wpath) + 1;
+                size_t convertedChars = 0;
+                const size_t newsize = origsize * 2;
+                char* path = new char[newsize];
+                wcstombs_s(&convertedChars, path, newsize, wpath, _TRUNCATE);
 
+                image.load(path);
+                window->setDimentions(image.getWidth(), image.getHeight());
+                window->setAspectRatio(image.getWidth(), image.getHeight());
+                image.loadOnGPU();
+
+                delete[] path;
+                CoTaskMemFree(path);
                 break;
 #endif
             }
