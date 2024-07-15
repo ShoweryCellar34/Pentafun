@@ -62,19 +62,21 @@ void eventCallback(PNT::Window* window, PNT::windowEvent event) {
 #ifdef _WIN32
             case GLFW_KEY_TAB:
                 PWSTR wpath = userGetPath();
-                size_t origsize = wcslen(wpath) + 1;
-                size_t convertedChars = 0;
-                const size_t newsize = origsize * 2;
-                char* path = new char[newsize];
-                wcstombs_s(&convertedChars, path, newsize, wpath, _TRUNCATE);
+                if(wpath != nullptr) {
+                    size_t origsize = wcslen(wpath) + 1;
+                    size_t convertedChars = 0;
+                    const size_t newsize = origsize * 2;
+                    char* path = new char[newsize];
+                    wcstombs_s(&convertedChars, path, newsize, wpath, _TRUNCATE);
 
-                image.load(path);
-                window->setDimentions(image.getWidth(), image.getHeight());
-                window->setAspectRatio(image.getWidth(), image.getHeight());
-                image.loadOnGPU();
+                    image.load(path);
+                    window->setDimentions(image.getWidth(), image.getHeight());
+                    window->setAspectRatio(image.getWidth(), image.getHeight());
+                    image.loadOnGPU();
 
-                delete[] path;
-                CoTaskMemFree(path);
+                    delete[] path;
+                }
+                CoTaskMemFree(wpath);
                 break;
 #endif
             }
@@ -143,6 +145,36 @@ int main(int argc, char *argv[]) {
         PNT::processEvents();
 
         window.startFrame();
+
+        if (ImGui::BeginMainMenuBar()) {
+              if (ImGui::BeginMenu("File")) {
+#ifdef _WIN32
+                    if (ImGui::MenuItem("Open", "TAB")) {
+                        PWSTR wpath = userGetPath();
+                        if(wpath != nullptr) {
+                            size_t origsize = wcslen(wpath) + 1;
+                            size_t convertedChars = 0;
+                            const size_t newsize = origsize * 2;
+                            char* path = new char[newsize];
+                            wcstombs_s(&convertedChars, path, newsize, wpath, _TRUNCATE);
+
+                            image.load(path);
+                            window.setDimentions(image.getWidth(), image.getHeight());
+                            window.setAspectRatio(image.getWidth(), image.getHeight());
+                            image.loadOnGPU();
+
+                            delete[] path;
+                        }
+                        CoTaskMemFree(wpath);
+                    }
+#endif
+#ifndef _WIN32
+                        ImGui::Text("File open dialog only avalable on windows");
+#endif
+        ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+        }
 
         shader.use();
 
