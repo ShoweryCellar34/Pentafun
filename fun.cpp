@@ -76,8 +76,6 @@ int main(int argc, char *argv[]) {
 
     glUniform1i(glGetUniformLocation(shader.getID(), "texture"), image.getID());
 
-    PNT::pushEvent(&window, PNT::createKeyEvent(GLFW_KEY_ESCAPE, 0, GLFW_PRESS, 0));
-
     while(!window.shouldClose()) {
         PNT::processEvents();
 
