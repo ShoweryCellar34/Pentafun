@@ -91,6 +91,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    GLFWwindow* win = glfwCreateWindow(500, 500, "TEST", nullptr, nullptr);
+
     image.load("res\\textures\\logo\\ghoul.png");
     PNT::Window window("Drag'n Drop", image.getWidth(), image.getHeight(), 500, 500, ImGuiConfigFlags_None);
     window.setAspectRatio(image.getWidth(), image.getHeight());
