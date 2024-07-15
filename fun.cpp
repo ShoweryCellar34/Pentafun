@@ -1,5 +1,9 @@
 #include <Pentagram.hpp>
 #include <iostream>
+#ifdef _WIN32
+#include <windows.h>
+#include <shlobj.h>
+#endif
 
 PNT::image image;
 
@@ -8,6 +12,7 @@ void eventCallback(PNT::Window* window, PNT::windowEvent event) {
     case PNT_EVENT_TYPE_DROP:
         image.load(event.dropFiles.paths[0]);
         window->setDimentions(image.getWidth(), image.getHeight());
+        window->setAspectRatio(image.getWidth(), image.getHeight());
         image.loadOnGPU();
         break;
     case PNT_EVENT_TYPE_KEYBOARD:
@@ -19,6 +24,11 @@ void eventCallback(PNT::Window* window, PNT::windowEvent event) {
             case GLFW_KEY_ESCAPE:
                 window->setShouldClose(true);
                 break;
+#ifdef _WIN32
+            case GLFW_KEY_TAB:
+
+                break;
+#endif
             }
         }
     }
@@ -33,6 +43,7 @@ int main(int argc, char *argv[]) {
 
     image.load("res\\textures\\logo\\ghoul.png");
     PNT::Window window("Drag'n Drop", image.getWidth(), image.getHeight(), 500, 500, ImGuiConfigFlags_None);
+    window.setAspectRatio(image.getWidth(), image.getHeight());
     image.loadOnGPU();
     window.setEventCallback(eventCallback);
 
