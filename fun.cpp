@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 
     // Vertex shader.
     PNT::file file("res/shaders/vertex.glsl");
-    std::cout << file.getError() << '\n';
+    printf("%s\n", file.getError());
     PNT::shader vertexShader(file.getContents().c_str(), GL_VERTEX_SHADER);
     vertexShader.compile();
     std::cout << vertexShader.getError() << '\n';
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     // Fragment shader.
     file.close();
     file.open("res/shaders/fragment.glsl");
-    std::cout << file.getError() << '\n';
+    printf("%s\n", file.getError());
     PNT::shader fragmentShader(file.getContents().c_str(), GL_FRAGMENT_SHADER);
     fragmentShader.compile();
     std::cout << fragmentShader.getError() << '\n';
