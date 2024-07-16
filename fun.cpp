@@ -103,7 +103,6 @@ int main(int argc, char *argv[]) {
     vertexShader.compile();
     std::cout << vertexShader.getError() << '\n';
 
-
     // Fragment shader.
     file.close();
     file.open("res\\shaders\\fragment.glsl");
