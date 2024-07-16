@@ -91,8 +91,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    GLFWwindow* win = glfwCreateWindow(500, 500, "TEST", nullptr, nullptr);
-
     image.load("res\\textures\\logo\\ghoul.png");
     PNT::Window window("Drag'n Drop", image.getWidth(), image.getHeight(), 500, 500, ImGuiConfigFlags_None);
     window.setAspectRatio(image.getWidth(), image.getHeight());
@@ -103,17 +101,20 @@ int main(int argc, char *argv[]) {
     PNT::file file("res\\shaders\\vertex.glsl");
     PNT::shader vertexShader(file.getContents().c_str(), GL_VERTEX_SHADER);
     vertexShader.compile();
+    std::cout << vertexShader.getError() << '\n';
+
 
     // Fragment shader.
     file.close();
     file.open("res\\shaders\\fragment.glsl");
     PNT::shader fragmentShader(file.getContents().c_str(), GL_FRAGMENT_SHADER);
     fragmentShader.compile();
+    std::cout << fragmentShader.getError() << '\n';
 
     // Shader program.
     PNT::program shader({&vertexShader, &fragmentShader});
     shader.link();
-    std::cout << shader.getError();
+    std::cout << shader.getError() << '\n';
 
     float vertices[] = {
          1.0f,  1.0f,
@@ -186,6 +187,6 @@ int main(int argc, char *argv[]) {
         window.endFrame();
     }
 
-    PNT::deinit();
+    //PNT::deinit();
     return 0;
 }
