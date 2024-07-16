@@ -43,6 +43,7 @@ PWSTR userGetPath() {
 PNT::image image;
 
 void eventCallback(PNT::Window* window, PNT::windowEvent event) {
+        std::cout << "dddddrop eeeeeeeeeeee-vent";
     switch(event.type) {
     case PNT_EVENT_TYPE_DROP:
         image.load(event.dropFiles.paths[0]);
@@ -98,14 +99,16 @@ int main(int argc, char *argv[]) {
     window.setEventCallback(eventCallback);
 
     // Vertex shader.
-    PNT::file file("res\\shaders\\vertex.glsl");
+    PNT::file file("res/shaders/vertex.glsl");
+    std::cout << file.getError() << '\n';
     PNT::shader vertexShader(file.getContents().c_str(), GL_VERTEX_SHADER);
     vertexShader.compile();
     std::cout << vertexShader.getError() << '\n';
 
     // Fragment shader.
     file.close();
-    file.open("res\\shaders\\fragment.glsl");
+    file.open("res/shaders/fragment.glsl");
+    std::cout << file.getError() << '\n';
     PNT::shader fragmentShader(file.getContents().c_str(), GL_FRAGMENT_SHADER);
     fragmentShader.compile();
     std::cout << fragmentShader.getError() << '\n';
