@@ -43,7 +43,6 @@ PWSTR userGetPath() {
 PNT::image image;
 
 void eventCallback(PNT::Window* window, PNT::windowEvent event) {
-        std::cout << "dddddrop eeeeeeeeeeee-vent";
     switch(event.type) {
     case PNT_EVENT_TYPE_DROP:
         image.load(event.dropFiles.paths[0]);
@@ -92,10 +91,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    image.load("res\\textures\\logo\\ghoul.png");
+    image.load("res/textures/logo/ghoul.png");
     PNT::Window window("Drag'n Drop", image.getWidth(), image.getHeight(), 500, 500, ImGuiConfigFlags_None);
-    window.setAspectRatio(image.getWidth(), image.getHeight());
     image.loadOnGPU();
+    window.setAspectRatio(image.getWidth(), image.getHeight());
     window.setEventCallback(eventCallback);
 
     // Vertex shader.
