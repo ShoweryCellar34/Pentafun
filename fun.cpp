@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     }
 
     image.load("res/textures/logo/ghoul.png");
-    PNT::Window window("Drag'n Drop", image.getWidth(), image.getHeight(), 500, 500, ImGuiConfigFlags_None);
+    PNT::Window window("Drag'n Drop", image.getWidth(), image.getHeight(), 500, 500, 0);
     image.loadOnGPU();
     window.setAspectRatio(image.getWidth(), image.getHeight());
     window.setEventCallback(eventCallback);
