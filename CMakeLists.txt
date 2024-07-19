@@ -9,6 +9,6 @@ add_dependencies(Pentafun Pentagram)
 target_include_directories(Pentafun PUBLIC Pentagram)
 target_link_libraries(Pentafun PUBLIC Pentagram)
 
-target_sources(Pentafun PUBLIC "fun.cpp")
+target_sources(Pentafun PUBLIC "source/fun.cpp")
 
 add_custom_target(copy_resources ALL COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/res ${PROJECT_BINARY_DIR}/res COMMENT "Copying resources into binary directory")
